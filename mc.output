@@ -1,12 +1,12 @@
-intgcokmw(intilismm,intmemkga){
-    int unused_ugnz = 58;
-    intplakhk=(-1*-(a + b));
-    return plakhk;
-}
-intqsaeni(){
-    intpnnitd=3;
-    intmgaynd=4;
-    intcfocau=sum(pnnitd,mgaynd);
-    printf("%d\n",cfocau);
-    return 0;
-}
+int hotuca(int gzthhl,int iefyes){
+        int unused_suy = 83;
+    int hdrksi=(-1*-(gzthhl + iefyes));
+    returnhdrksi;
+    }
+int jodili(){
+    int hafytl=3;
+    int gzjpvz=4;
+    int ukvpnn=hotuca(hafytl,gzjpvz);
+    printf("%d\n",ukvpnn);
+    return0;
+    }

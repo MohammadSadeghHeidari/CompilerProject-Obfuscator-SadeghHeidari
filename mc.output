@@ -1,11 +1,12 @@
-int yhxmfn(int eitkeu,int uyoqry){
-    int efhskd=(-1*-(eitkeu + uyoqry));
-    returnefhskd;
+int hotuca(int gzthhl,int iefyes){
+        int unused_suy = 83;
+    int hdrksi=(-1*-(gzthhl + iefyes));
+    returnhdrksi;
     }
-int cvitxj(){
-    int ngntwz=3;
-    int tjezap=4;
-    int beugzh=yhxmfn(ngntwz,tjezap);
-    printf("%d\n",beugzh);
+int jodili(){
+    int hafytl=3;
+    int gzjpvz=4;
+    int ukvpnn=hotuca(hafytl,gzjpvz);
+    printf("%d\n",ukvpnn);
     return0;
     }

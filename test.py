@@ -53,6 +53,7 @@ class ObfuscatingListener(CMiniListener):
             text = child.getText()
             if text in obf_map:
                 self.replace(child, obf_map[text])
+
         if ctx.getChildCount() == 3:
             op = ctx.getChild(1).getText()
             if op == '+':
@@ -67,19 +68,11 @@ class ObfuscatingListener(CMiniListener):
             self.replace(ctx.ID(), obf_map[fname])
 
     def enterReturnStmt(self, ctx):
-        # گرفتن کل محدوده‌ی return statement (شامل ;)
-        interval = ctx.getSourceInterval()
-        start_index = interval[0]
-        end_index = interval[1]
-
-        expr_text = ctx.expression().getText() if ctx.expression() else ""
-        new_expr = obf_map.get(expr_text, expr_text)
-        new_return_stmt = f'return {new_expr};'
-
-        # پاک‌سازی همه‌ی توکن‌ها در محدوده و جایگزینی با return + فاصله
-        for i in range(start_index, end_index + 1):
-            self.token_list[i].text = ""
-        self.token_list[start_index].text = new_return_stmt
+        if ctx.expression():
+            expr_text = ctx.expression().getText()
+            new_expr = obf_map.get(expr_text, expr_text)
+            full_return = 'return '+ new_expr
+            self.replace(ctx, full_return)
 
     def enterBlock(self, ctx):
         if random.random() < 0.3:

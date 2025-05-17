@@ -1,12 +1,11 @@
-intgcokmw(intilismm,intmemkga){
-    int unused_ugnz = 58;
-    intplakhk=(-1*-(a + b));
-    return plakhk;
-}
-intqsaeni(){
-    intpnnitd=3;
-    intmgaynd=4;
-    intcfocau=sum(pnnitd,mgaynd);
-    printf("%d\n",cfocau);
-    return 0;
-}
+int yhxmfn(int eitkeu,int uyoqry){
+    int efhskd=(-1*-(eitkeu + uyoqry));
+    returnefhskd;
+    }
+int cvitxj(){
+    int ngntwz=3;
+    int tjezap=4;
+    int beugzh=yhxmfn(ngntwz,tjezap);
+    printf("%d\n",beugzh);
+    return0;
+    }

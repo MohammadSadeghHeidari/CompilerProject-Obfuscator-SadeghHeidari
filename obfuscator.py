@@ -73,22 +73,24 @@ class ObfuscatingListener(CMiniListener):
         if fname in obf_map:
             self.replace(ctx.ID(), obf_map[fname])
             
-        def enterStatement(self, ctx):
-            if ctx.getChildCount() >= 2 and ctx.getChild(0).getText() == "return":
-                expr = ctx.getChild(1).getText() if ctx.getChildCount() > 2 else ""
-                new_expr = obf_map.get(expr, expr)
-                new_return_stmt = f"return {new_expr};"
+    def enterStatement(self, ctx):
+        if ctx.getChildCount() >= 2 and ctx.getChild(0).getText() == "return":
+            expr = ctx.getChild(1).getText() if ctx.getChildCount() > 2 else ""
+            new_expr = obf_map.get(expr, expr)
+            new_return_stmt = f"return {new_expr};"
 
-                interval = ctx.getSourceInterval()
-                for i in range(interval[0], interval[1] + 1):
-                    self.token_list[i].text = ""
-                self.token_list[interval[0]].text = new_return_stmt
+            interval = ctx.getSourceInterval()
+            for i in range(interval[0], interval[1] + 1):
+                self.token_list[i].text = ""
+            self.token_list[interval[0]].text = new_return_stmt
 
+    #dead code
     def enterBlock(self, ctx):
         if random.random() < 0.3:
             dead_code = f"int unused_{random_name(3)} = {random.randint(0, 100)};"
             open_brace = ctx.getChild(0)
             self.token_list[open_brace.symbol.tokenIndex].text += f"\n    {dead_code}"
+
 
 def main():
     input_file = "mc.input"

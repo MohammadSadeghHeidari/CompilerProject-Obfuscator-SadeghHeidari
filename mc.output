@@ -1,15 +1,12 @@
-int quamtq(int kcfqko){
-    int rnbhpc=1;
-    while(kcfqko>1){
-    rnbhpc=rnbhpc*kcfqko;
-    kcfqko=kcfqko-1;
+int bnnsfd(int dipwkk,int cdxojr){
+        int unused_npz = 73;
+    int gmmmwf=(-1*-(dipwkk + cdxojr));
+    return gmmmwf;
     }
-return rnbhpc;
-    }
-int muoryz(){
-    int ubgxnq=quamtq(4);
-    if(ubgxnq>0){
-    printf("Result: %d\n",ubgxnq);
-    }
-return 0;
+int nntprd(){
+    int fdyovr=3;
+    int mbwqql=4;
+    int oqwtgr=bnnsfd(fdyovr,mbwqql);
+    printf("%d\n",oqwtgr);
+    return 0;
     }

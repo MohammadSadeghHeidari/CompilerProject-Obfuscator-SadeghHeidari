@@ -1,12 +1,12 @@
-int hotuca(int gzthhl,int iefyes){
-        int unused_suy = 83;
-    int hdrksi=(-1*-(gzthhl + iefyes));
-    returnhdrksi;
+int ctrbpe(int axieax,int npqznd){
+        int unused_fkb = 4;
+    int pwlelx=(-1*-(axieax + npqznd));
+    return pwlelx;
     }
-int jodili(){
-    int hafytl=3;
-    int gzjpvz=4;
-    int ukvpnn=hotuca(hafytl,gzjpvz);
-    printf("%d\n",ukvpnn);
-    return0;
+int mvgown(){
+    int pvoafi=3;
+    int njjtnk=4;
+    int crynjx=ctrbpe(pvoafi,njjtnk);
+    printf("%d\n",crynjx);
+    return 0;
     }

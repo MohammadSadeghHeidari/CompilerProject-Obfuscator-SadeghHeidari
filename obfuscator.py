@@ -18,12 +18,6 @@ def add_space_after_return(input_string):
     return corrected_string
 
 
-
-# مثال استفاده
-input_str = "def func():returnx+1"
-output_str = add_space_after_return(input_str)
-print(output_str)  # خروجی: "def func():return x+1"
-
 class ObfuscatingListener(CMiniListener):
     def __init__(self, tokens: CommonTokenStream):
         self.tokens = tokens
@@ -80,7 +74,6 @@ class ObfuscatingListener(CMiniListener):
             self.replace(ctx.ID(), obf_map[fname])
             
         def enterStatement(self, ctx):
-        # بررسی اینکه آیا این statement از نوع return است
             if ctx.getChildCount() >= 2 and ctx.getChild(0).getText() == "return":
                 expr = ctx.getChild(1).getText() if ctx.getChildCount() > 2 else ""
                 new_expr = obf_map.get(expr, expr)

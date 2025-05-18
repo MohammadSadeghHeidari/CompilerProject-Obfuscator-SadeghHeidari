@@ -81,6 +81,7 @@ class ObfuscatingListener(CMiniListener):
             self.token_list[i].text = ""
         self.token_list[start_index].text = new_return_stmt
 
+    #dead code
     def enterBlock(self, ctx):
         if random.random() < 0.3:
             dead_code = f"int unused_{random_name(3)} = {random.randint(0, 100)};"

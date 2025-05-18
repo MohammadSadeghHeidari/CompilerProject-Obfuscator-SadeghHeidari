@@ -11,6 +11,19 @@ obf_map = {}
 def random_name(length=6):
     return ''.join(random.choices(string.ascii_lowercase, k=length))
 
+def add_space_after_return(input_string):
+    corrected_string = input_string.replace('return', 'return ')
+    while 'return  ' in corrected_string:
+        corrected_string = corrected_string.replace('return  ', 'return ')
+    return corrected_string
+
+
+
+# مثال استفاده
+input_str = "def func():returnx+1"
+output_str = add_space_after_return(input_str)
+print(output_str)  # خروجی: "def func():return x+1"
+
 class ObfuscatingListener(CMiniListener):
     def __init__(self, tokens: CommonTokenStream):
         self.tokens = tokens
@@ -65,21 +78,18 @@ class ObfuscatingListener(CMiniListener):
         fname = ctx.ID().getText()
         if fname in obf_map:
             self.replace(ctx.ID(), obf_map[fname])
+            
+        def enterStatement(self, ctx):
+        # بررسی اینکه آیا این statement از نوع return است
+            if ctx.getChildCount() >= 2 and ctx.getChild(0).getText() == "return":
+                expr = ctx.getChild(1).getText() if ctx.getChildCount() > 2 else ""
+                new_expr = obf_map.get(expr, expr)
+                new_return_stmt = f"return {new_expr};"
 
-    def enterReturnStmt(self, ctx):
-        # گرفتن کل محدوده‌ی return statement (شامل ;)
-        interval = ctx.getSourceInterval()
-        start_index = interval[0]
-        end_index = interval[1]
-
-        expr_text = ctx.expression().getText() if ctx.expression() else ""
-        new_expr = obf_map.get(expr_text, expr_text)
-        new_return_stmt = f'return {new_expr};'
-
-        # پاک‌سازی همه‌ی توکن‌ها در محدوده و جایگزینی با return + فاصله
-        for i in range(start_index, end_index + 1):
-            self.token_list[i].text = ""
-        self.token_list[start_index].text = new_return_stmt
+                interval = ctx.getSourceInterval()
+                for i in range(interval[0], interval[1] + 1):
+                    self.token_list[i].text = ""
+                self.token_list[interval[0]].text = new_return_stmt
 
     def enterBlock(self, ctx):
         if random.random() < 0.3:
@@ -106,7 +116,8 @@ def main():
                                           .replace(';', ';\n    ') \
                                           .replace('}', '\n}\n') \
                                           .replace('\n    \n', '\n    ')
-        f.write(formatted)
+        formatted_x = add_space_after_return(formatted)
+        f.write(formatted_x)
 
 if __name__ == '__main__':
     main()

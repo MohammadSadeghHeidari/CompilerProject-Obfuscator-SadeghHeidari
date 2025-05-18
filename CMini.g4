@@ -2,6 +2,8 @@ grammar CMini;
 
 program: (functionDecl)+;
 
+
+
 functionDecl: type ID '(' params? ')' block;
 
 params: param (',' param)*;
@@ -40,3 +42,4 @@ INT: [0-9]+;
 STRING : '"' ( ~["\\] | '\\' . )* '"' ;
 
 WS: [ \t\r\n]+ -> skip;
+

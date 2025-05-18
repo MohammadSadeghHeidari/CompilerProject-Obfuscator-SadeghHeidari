@@ -1,12 +1,15 @@
-int ctrbpe(int axieax,int npqznd){
-        int unused_fkb = 4;
-    int pwlelx=(-1*-(axieax + npqznd));
-    return pwlelx;
+int quamtq(int kcfqko){
+    int rnbhpc=1;
+    while(kcfqko>1){
+    rnbhpc=rnbhpc*kcfqko;
+    kcfqko=kcfqko-1;
     }
-int mvgown(){
-    int pvoafi=3;
-    int njjtnk=4;
-    int crynjx=ctrbpe(pvoafi,njjtnk);
-    printf("%d\n",crynjx);
-    return 0;
+return rnbhpc;
+    }
+int muoryz(){
+    int ubgxnq=quamtq(4);
+    if(ubgxnq>0){
+    printf("Result: %d\n",ubgxnq);
+    }
+return 0;
     }

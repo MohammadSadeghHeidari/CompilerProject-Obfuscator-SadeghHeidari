@@ -1,13 +1,16 @@
 #include <stdio.h>
 
-int exxima(int enxlyn,int kexpjt){
-    int ixphfp=(-1*-(enxlyn + kexpjt));
-    return ixphfp;
-    }
 int main(){
-    int ffdzgs=3;
-    int xbwzja=4;
-    int tglltq=exxima(ffdzgs,xbwzja);
-    printf("%d\n",tglltq);
-    return 0;
+        int unused_nwp = 60;
+    int ykvylv=5;
+    {
+    int nqunsa=10;
+    {
+        int unused_owj = 36;
+    int fuzndv=(-1*-(ykvylv + nqunsa));
+    printf("%d\n",fuzndv);
+    }
+
+}
+return 0;
     }

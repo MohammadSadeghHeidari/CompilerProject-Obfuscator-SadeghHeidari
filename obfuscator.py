@@ -12,7 +12,6 @@ from CMiniListener import CMiniListener
 
 obf_map = {}
 
-# ===== تکنیک‌ها =====
 APPLY_VAR_RENAME = False
 APPLY_DEAD_CODE = False
 APPLY_COMPLEX_EXPR = False
@@ -102,7 +101,7 @@ class ObfuscatingListener(CMiniListener):
             self.token_list[interval[0]].text = new_return_stmt
 
     def enterBlock(self, ctx):
-        if APPLY_DEAD_CODE and random.random() < 0.3:
+        if APPLY_DEAD_CODE and random.random() < 0.8:
             dead_code = f"int unused_{random_name(3)} = {random.randint(0, 100)};"
             open_brace = ctx.getChild(0)
             self.token_list[open_brace.symbol.tokenIndex].text += f"\n    {dead_code}"
@@ -119,10 +118,10 @@ def compile_and_run(filename, exe_name):
         elapsed_time = time.time() - start_time
         return elapsed_time
     except subprocess.CalledProcessError as e:
-        print(f"❌ خطا هنگام کامپایل فایل {filename}:")
+        print(f"error compile: {filename}:")
         print(e.stderr)
         with open(filename, "r") as f:
-            print("\n🔎 محتوای فایل مشکل‌دار:")
+            print("\ncontent: ")
             print(f.read())
         return None
 
@@ -140,25 +139,24 @@ def compare_files(input_file, output_file):
     time_input = compile_and_run("temp_input.c", "a_input")
     time_output = compile_and_run("temp_output.c", "a_output")
 
-    print(f"\n📊 مقایسه نهایی:")
-    print(f"- اندازه کد اصلی: {size_input} بایت")
-    print(f"- اندازه کد مبهم‌ شده: {size_output} بایت")
+    print(f" size of main code: {size_input} byte")
+    print(f"size of obfuscatored code: {size_output} byte")
     if time_input is not None and time_output is not None:
-        print(f"- زمان اجرای کد اصلی: {time_input:.6f} ثانیه")
-        print(f"- زمان اجرای کد مبهم‌شده: {time_output:.6f} ثانیه")
+        print(f"execution time of main code: {time_input:.6f} sec")
+        print(f"execution time of obfuscatored code: {time_output:.6f} sec")
 
 
 def main():
     global APPLY_VAR_RENAME, APPLY_DEAD_CODE, APPLY_COMPLEX_EXPR
 
-    input_file = input("📝 نام فایل ورودی را وارد کنید (مثلاً mc.input): ").strip()
+    input_file = input("write the input file name: ").strip()
     output_file = "mc.output"
 
-    print("\n🎯 تکنیک‌های مورد نظر را انتخاب کنید (با کاما جدا کنید):")
+    print("\nchoose techniqes you want):")
     print("1)change names ")
     print("2)dead codes ")
     print("3)complications ")
-    selected = input("شماره‌ها را وارد کنید (مثلاً: 1,2): ")
+    selected = input("write the related numbers: ")
     choices = [s.strip() for s in selected.split(',')]
 
     APPLY_VAR_RENAME = '1' in choices

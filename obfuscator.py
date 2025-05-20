@@ -2,6 +2,7 @@ import sys
 import random
 import string
 import os
+import re
 import time
 import subprocess
 from antlr4 import *
@@ -11,6 +12,11 @@ from CMiniListener import CMiniListener
 
 obf_map = {}
 
+# ===== تکنیک‌ها =====
+APPLY_VAR_RENAME = False
+APPLY_DEAD_CODE = False
+APPLY_COMPLEX_EXPR = False
+
 def random_name(length=6):
     return ''.join(random.choices(string.ascii_lowercase, k=length))
 
@@ -19,7 +25,6 @@ def add_space_after_return(input_string):
     while 'return  ' in corrected_string:
         corrected_string = corrected_string.replace('return  ', 'return ')
     return corrected_string
-
 
 class ObfuscatingListener(CMiniListener):
     def __init__(self, tokens: CommonTokenStream):
@@ -36,25 +41,31 @@ class ObfuscatingListener(CMiniListener):
 
     def enterFunctionDecl(self, ctx):
         func_name = ctx.ID().getText()
-        if func_name == "main":
+        if func_name == "main" or not APPLY_VAR_RENAME:
             return 
         new_name = obf_map.get(func_name, random_name())
         obf_map[func_name] = new_name
         self.replace(ctx.ID(), f' {new_name}')
 
     def enterParam(self, ctx):
+        if not APPLY_VAR_RENAME:
+            return
         var_name = ctx.ID().getText()
         new_name = obf_map.get(var_name, random_name())
         obf_map[var_name] = new_name
         self.replace(ctx.ID(), f' {new_name}')
 
     def enterVarDecl(self, ctx):
+        if not APPLY_VAR_RENAME:
+            return
         var_name = ctx.ID().getText()
         new_name = obf_map.get(var_name, random_name())
         obf_map[var_name] = new_name
         self.replace(ctx.ID(), f' {new_name}')
 
     def enterAssignment(self, ctx):
+        if not APPLY_VAR_RENAME:
+            return
         var_name = ctx.ID().getText()
         if var_name in obf_map:
             self.replace(ctx.ID(), obf_map[var_name])
@@ -63,9 +74,9 @@ class ObfuscatingListener(CMiniListener):
         for i in range(ctx.getChildCount()):
             child = ctx.getChild(i)
             text = child.getText()
-            if text in obf_map:
+            if APPLY_VAR_RENAME and text in obf_map:
                 self.replace(child, obf_map[text])
-        if ctx.getChildCount() == 3:
+        if APPLY_COMPLEX_EXPR and ctx.getChildCount() == 3:
             op = ctx.getChild(1).getText()
             if op == '+':
                 left = ctx.getChild(0).getText()
@@ -74,42 +85,28 @@ class ObfuscatingListener(CMiniListener):
                 self.replace(ctx, complex_expr)
 
     def enterFunctionCall(self, ctx):
+        if not APPLY_VAR_RENAME:
+            return
         fname = ctx.ID().getText()
         if fname in obf_map:
             self.replace(ctx.ID(), obf_map[fname])
-            
+
     def enterStatement(self, ctx):
         if ctx.getChildCount() >= 2 and ctx.getChild(0).getText() == "return":
             expr = ctx.getChild(1).getText() if ctx.getChildCount() > 2 else ""
             new_expr = obf_map.get(expr, expr)
             new_return_stmt = f"return {new_expr};"
-
             interval = ctx.getSourceInterval()
             for i in range(interval[0], interval[1] + 1):
                 self.token_list[i].text = ""
             self.token_list[interval[0]].text = new_return_stmt
 
     def enterBlock(self, ctx):
-        if random.random() < 0.3:
+        if APPLY_DEAD_CODE and random.random() < 0.3:
             dead_code = f"int unused_{random_name(3)} = {random.randint(0, 100)};"
             open_brace = ctx.getChild(0)
             self.token_list[open_brace.symbol.tokenIndex].text += f"\n    {dead_code}"
 
-'''
-def compile_and_run(filename, exe_name):
-    compile_cmd = ["gcc", filename, "-o", exe_name]
-    run_cmd = f"./{exe_name}"
-
-    try:
-        subprocess.run(compile_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-        start_time = time.time()
-        subprocess.run(run_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        elapsed_time = time.time() - start_time
-        return elapsed_time
-    except Exception as e:
-        print(f"Error running {filename}: {e}")
-        return None
-'''
 
 def compile_and_run(filename, exe_name):
     compile_cmd = ["gcc", filename, "-o", exe_name]
@@ -130,10 +127,7 @@ def compile_and_run(filename, exe_name):
         return None
 
 
-def compare_files():
-    input_file = "mc.input"
-    output_file = "mc.output"
-
+def compare_files(input_file, output_file):
     size_input = os.path.getsize(input_file)
     size_output = os.path.getsize(output_file)
 
@@ -146,16 +140,30 @@ def compare_files():
     time_input = compile_and_run("temp_input.c", "a_input")
     time_output = compile_and_run("temp_output.c", "a_output")
 
-    print(f" size of main code:  {size_input} byte")
-    print(f" size of obfuscatored code {size_output} byte")
+    print(f"\n📊 مقایسه نهایی:")
+    print(f"- اندازه کد اصلی: {size_input} بایت")
+    print(f"- اندازه کد مبهم‌ شده: {size_output} بایت")
     if time_input is not None and time_output is not None:
-        print(f"execution time of main code:  {time_input:.6f} sec")
-        print(f"execution time of obfuscatored code: {time_output:.6f} sec")
+        print(f"- زمان اجرای کد اصلی: {time_input:.6f} ثانیه")
+        print(f"- زمان اجرای کد مبهم‌شده: {time_output:.6f} ثانیه")
 
 
 def main():
-    input_file = "mc.input"
+    global APPLY_VAR_RENAME, APPLY_DEAD_CODE, APPLY_COMPLEX_EXPR
+
+    input_file = input("📝 نام فایل ورودی را وارد کنید (مثلاً mc.input): ").strip()
     output_file = "mc.output"
+
+    print("\n🎯 تکنیک‌های مورد نظر را انتخاب کنید (با کاما جدا کنید):")
+    print("1)change names ")
+    print("2)dead codes ")
+    print("3)complications ")
+    selected = input("شماره‌ها را وارد کنید (مثلاً: 1,2): ")
+    choices = [s.strip() for s in selected.split(',')]
+
+    APPLY_VAR_RENAME = '1' in choices
+    APPLY_DEAD_CODE = '2' in choices
+    APPLY_COMPLEX_EXPR = '3' in choices
 
     input_stream = FileStream(input_file)
     lexer = CMiniLexer(input_stream)
@@ -174,10 +182,10 @@ def main():
                                           .replace('\n    \n', '\n    ')
         formatted_x = add_space_after_return(formatted)
         formatted_x = "#include <stdio.h>\n\n" + formatted_x
-        formatted_x = formatted_x.replace("intmain", "int main")
+        formatted_x =re.sub(r'\b(int|void|float|main)([a-zA-Z_])', r'\1 \2', formatted_x)
         f.write(formatted_x)
 
-    compare_files()
+    compare_files(input_file, output_file)
 
 
 if __name__ == '__main__':

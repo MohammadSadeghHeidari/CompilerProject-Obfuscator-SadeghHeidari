@@ -155,6 +155,7 @@ def compare_files():
 
 
 def main():
+    #####
     input_file = "mc.input"
     output_file = "mc.output"
 

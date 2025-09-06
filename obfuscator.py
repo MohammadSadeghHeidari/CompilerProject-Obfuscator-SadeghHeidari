@@ -149,8 +149,8 @@ def compare_files(input_file, output_file):
 def main():
     global APPLY_VAR_RENAME, APPLY_DEAD_CODE, APPLY_COMPLEX_EXPR
 
-    input_file = input("write the input file name: ").strip()
-    output_file = "mc.output"
+    input_file = "input.mc"
+    output_file = "output.mc"
 
     print("\nchoose techniqes you want):")
     print("1)change names ")

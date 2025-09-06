@@ -1,14 +1,15 @@
 #include <stdio.h>
 
-int ovhnmm(int rhvjdx,int hsrrdx){
-    int xcslyq=(-1*-(rhvjdx + hsrrdx));
-    return xcslyq;
+int kypwff(int dfpzpd,int bckmpd){
+        int unused_dsg = 62;
+    int emtaeb=(-1*-(dfpzpd + bckmpd));
+    return emtaeb;
     }
 int main(){
-        int unused_sor = 79;
-    int upqxsz=3;
-    int pfqeeh=4;
-    int vveafd=ovhnmm(upqxsz,pfqeeh);
-    printf("%d\n",vveafd);
+        int unused_kds = 99;
+    int kzokly=3;
+    int amgnpw=4;
+    int cuexko=kypwff(kzokly,amgnpw);
+    printf("%d\n",cuexko);
     return 0;
     }
